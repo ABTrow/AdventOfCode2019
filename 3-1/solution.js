@@ -35,8 +35,8 @@ function intersectionFinder(path1, path2) {
     let amount = Number(step.slice(1));
 
     for (let i = 0; i < path1Nodes.length - 1; i++) {
-      [path1x1, path1y1] = path1Nodes[i];
-      [path1x2, path1y2] = path1Nodes[i + 1];
+      let [path1x1, path1y1] = path1Nodes[i];
+      let [path1x2, path1y2] = path1Nodes[i + 1];
 
       switch (direction) {
         case 'U':
@@ -96,14 +96,12 @@ function intersectionFinder(path1, path2) {
 
   let intersectionDistances = intersections.filter(distance => distance > 0);
 
-  console.log(intersectionDistances);
-
   return Math.min(...intersectionDistances);
 }
 
-path1test = `R75,D30,R83,U83,L12,D49,R71,U7,L72`.split(',');
-path2test = `U62,R66,U55,R34,D71,R55,D58,R83`.split(',');
+// path1test = `R75,D30,R83,U83,L12,D49,R71,U7,L72`.split(',');
+// path2test = `U62,R66,U55,R34,D71,R55,D58,R83`.split(',');
 
-console.log(intersectionFinder(path1test, path2test));
+// console.log(intersectionFinder(path1test, path2test));
 
 console.log(intersectionFinder(path1Formatted, path2Formatted));
