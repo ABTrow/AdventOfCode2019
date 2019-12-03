@@ -60,11 +60,11 @@ function intersectionFinder(path1, path2) {
         case 'R':
           if (
             path2y >= Math.min(path1y1, path1y2) &&
-            path2y <= Math.max(Math.abs(path1y1), Math.abs(path1y2)) &&
+            path2y <= Math.max(path1y1, path1y2) &&
             path1x1 >= path2x &&
             path1x1 <= path2x + amount
           )
-            intersections.push(path2y + path1x1);
+            intersections.push(Math.abs(path2y) + Math.abs(path1x1));
           break;
         case 'L':
           if (
@@ -105,4 +105,5 @@ path1test = `R75,D30,R83,U83,L12,D49,R71,U7,L72`.split(',');
 path2test = `U62,R66,U55,R34,D71,R55,D58,R83`.split(',');
 
 console.log(intersectionFinder(path1test, path2test));
-// console.log(intersectionFinder(path1Formatted, path2Formatted));
+
+console.log(intersectionFinder(path1Formatted, path2Formatted));
