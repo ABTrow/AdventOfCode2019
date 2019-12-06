@@ -6,9 +6,11 @@ function buildOrbitGraph(orbitMap) {
   });
   let orbitGraph = {};
   formattedMap.forEach(([center, satellite]) => {
-    if (orbitGraph[center]) orbitGraph[center].push(satellite);
-    else orbitGraph[center] = [satellite];
-    if (!orbitGraph[satellite]) orbitGraph[satellite] = [];
+    if (orbitGraph[center]) orbitGraph[center].satellites.push(satellite);
+    else orbitGraph[center] = { satellites: [satellite], parent: null };
+    if (!orbitGraph[satellite])
+      orbitGraph[satellite] = { satellites: [], parent: center };
+    else orbitGraph[satellite].parent = center;
   });
 
   return orbitGraph;
@@ -21,7 +23,7 @@ function orbitChecksum(orbitMap) {
 
   function countOrbits(center, depth = 0) {
     orbitCounter += depth;
-    for (let satellite of orbitGraph[center]) {
+    for (let satellite of orbitGraph[center].satellites) {
       countOrbits(satellite, depth + 1);
     }
   }
@@ -32,3 +34,7 @@ function orbitChecksum(orbitMap) {
 }
 
 console.log(orbitChecksum(INPUTS));
+
+module.exports = {
+  buildOrbitGraph,
+};
