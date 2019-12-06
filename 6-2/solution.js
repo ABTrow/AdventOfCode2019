@@ -6,30 +6,25 @@ function transferCounter(orbitMap) {
   let start = orbitGraph['YOU'].parent;
   let end = orbitGraph['SAN'].parent;
 
-  let totalTransfers = 0;
-  let startPath = [];
-  let endPath = [];
+  let startPath = makePathFromCOM(orbitGraph, start);
+  let endPath = makePathFromCOM(orbitGraph, end);
 
-  let currentNode = orbitGraph[start];
-  while (currentNode.parent) {
-    totalTransfers++;
-    startPath.unshift(currentNode.parent);
-    currentNode = orbitGraph[currentNode.parent];
-  }
-
-  currentNode = orbitGraph[end];
-  while (currentNode.parent) {
-    totalTransfers++;
-    endPath.unshift(currentNode.parent);
-    currentNode = orbitGraph[currentNode.parent];
-  }
-
-  console.log(totalTransfers);
+  let totalTransfers = startPath.length + endPath.length;
 
   for (let i = 1; i < startPath.length; i++) {
     if (startPath[i] === endPath[i]) totalTransfers -= 2;
     else return totalTransfers;
   }
+}
+
+function makePathFromCOM(orbitGraph, target) {
+  let path = [];
+  let currentNode = orbitGraph[target];
+  while (currentNode.parent) {
+    path.unshift(currentNode.parent);
+    currentNode = orbitGraph[currentNode.parent];
+  }
+  return path;
 }
 
 console.log(transferCounter(INPUTS));
