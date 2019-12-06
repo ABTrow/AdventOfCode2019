@@ -12,6 +12,7 @@ function transferCounter(orbitMap) {
   let totalTransfers = startPath.length + endPath.length;
 
   for (let i = 1; i < startPath.length; i++) {
+    // if the paths share a node, it is an unecessary transfer that can be elimated from each path
     if (startPath[i] === endPath[i]) totalTransfers -= 2;
     else return totalTransfers;
   }
