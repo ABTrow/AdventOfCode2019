@@ -74,8 +74,13 @@ function intcodeReaderV2(code, ...inputs) {
 }
 
 function parseInstruction(rawInstruction) {
+  // get instruction from tens and units place
   let instruction = rawInstruction % 100;
+
+  //get parameters from hundreds and up
   let parameters = Math.floor(rawInstruction / 100);
+
+  //if there are parameters split and reverse for easier use later
   if (parameters > 0) {
     parameters = String(parameters)
       .split('')
