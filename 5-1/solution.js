@@ -13,53 +13,53 @@ function intcodeReaderV2(code, ...inputs) {
     //   ` at ${i}: action ${instruction} with parameter modes ${parameterModes}`
     // );
     switch (instruction) {
-      case '99':
+      case 99:
         console.log('program complete');
         return;
-      case '01': {
+      case 1: {
         let target = code[i + 3];
         // console.log(`adding ${param1}, ${param2} and placing it at ${target}`);
         code[target] = param1 + param2;
         i += 4;
         break;
       }
-      case '02': {
+      case 2: {
         let target = code[i + 3];
         // console.log(`multiplying ${param1}, ${param2} and placing it at ${target}`);
         code[target] = param1 * param2;
         i += 4;
         break;
       }
-      case '03': {
+      case 3: {
         target = code[i + 1];
         // console.log(`placing ${inputs[0]} at ${target}`);
         code[target] = inputs[0];
         i += 2;
         break;
       }
-      case '04': {
+      case 4: {
         let output = param1;
         console.log(`Line ${i}: ${output}`);
         i += 2;
         break;
       }
-      case '05': {
+      case 5: {
         if (param1) i = param2;
         else i += 3;
         break;
       }
-      case '06': {
+      case 6: {
         if (!param1) i = param2;
         else i += 3;
         break;
       }
-      case '07': {
+      case 7: {
         let target = code[i + 3];
         code[target] = param1 < param2 ? 1 : 0;
         i += 4;
         break;
       }
-      case '08': {
+      case 8: {
         let target = code[i + 3];
         code[target] = param1 === param2 ? 1 : 0;
         i += 4;
@@ -74,18 +74,10 @@ function intcodeReaderV2(code, ...inputs) {
 }
 
 function parseInstruction(rawInstruction) {
-  // console.log(rawInstruction);
-  let stringInstruction = String(rawInstruction);
-  let instruction = '';
-  let parameters = [];
-  if (stringInstruction.length === 1) {
-    instruction = '0' + stringInstruction;
-  } else {
-    instruction = stringInstruction.slice(stringInstruction.length - 2);
-  }
-  if (stringInstruction.length > 2) {
-    parameters = stringInstruction
-      .slice(0, stringInstruction.length - 2)
+  let instruction = rawInstruction % 100;
+  let parameters = Math.floor(rawInstruction / 100);
+  if (parameters > 0) {
+    parameters = String(parameters)
       .split('')
       .reverse()
       .map(char => Number(char));
