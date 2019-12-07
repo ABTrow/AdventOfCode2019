@@ -1,6 +1,25 @@
 const INPUTS = require('./input');
 
 function intcodeReaderV2(code, ...inputs) {
+  function parseInstruction(rawInstruction) {
+    // get instruction from tens and units place
+    let instruction = rawInstruction % 100;
+
+    //get parameters from hundreds and up
+    let parameters = Math.floor(rawInstruction / 100);
+
+    //if there are parameters split and reverse for easier use later
+    if (parameters > 0) {
+      parameters = String(parameters)
+        .split('')
+        .reverse()
+        .map(char => Number(char));
+    }
+    return [instruction, parameters];
+  }
+
+  let outputs = [];
+  let inputIndex = 0;
   let i = 0;
   while (i < code.length) {
     let [instruction, parameterModes] = parseInstruction(code[i]);
@@ -32,14 +51,16 @@ function intcodeReaderV2(code, ...inputs) {
       }
       case 3: {
         target = code[i + 1];
-        // console.log(`placing ${inputs[0]} at ${target}`);
-        code[target] = inputs[0];
+        // console.log(`placing ${inputs[inputIndex]} at ${target}`);
+        code[target] = inputs[inputIndex];
+        inputIndex++;
         i += 2;
         break;
       }
       case 4: {
         let output = param1;
         console.log(`Line ${i}: ${output}`);
+        outputs.push(output);
         i += 2;
         break;
       }
@@ -71,23 +92,8 @@ function intcodeReaderV2(code, ...inputs) {
         );
     }
   }
+
+  return outputs;
 }
 
-function parseInstruction(rawInstruction) {
-  // get instruction from tens and units place
-  let instruction = rawInstruction % 100;
-
-  //get parameters from hundreds and up
-  let parameters = Math.floor(rawInstruction / 100);
-
-  //if there are parameters split and reverse for easier use later
-  if (parameters > 0) {
-    parameters = String(parameters)
-      .split('')
-      .reverse()
-      .map(char => Number(char));
-  }
-  return [instruction, parameters];
-}
-
-intcodeReaderV2(INPUTS, 5);
+module.exports = { intcodeReaderV2 };
