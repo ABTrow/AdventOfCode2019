@@ -33,8 +33,8 @@ function intcodeReaderV2(code, ...inputs) {
     // );
     switch (instruction) {
       case 99:
-        console.log('program complete');
-        return;
+        // console.log('program complete');
+        return outputs;
       case 1: {
         let target = code[i + 3];
         // console.log(`adding ${param1}, ${param2} and placing it at ${target}`);
@@ -59,7 +59,7 @@ function intcodeReaderV2(code, ...inputs) {
       }
       case 4: {
         let output = param1;
-        console.log(`Line ${i}: ${output}`);
+        // console.log(`Line ${i}: ${output}`);
         outputs.push(output);
         i += 2;
         break;
