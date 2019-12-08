@@ -39,6 +39,4 @@ function findMaxThrust(settingsArray, program) {
   return maxThrust;
 }
 
-console.log(findMaxThrust(possiblePhaseSettings, INPUT));
-
-// console.log(intcodeReaderV2(INPUT, 3, 0));
+module.exports = { permutationMaker };
