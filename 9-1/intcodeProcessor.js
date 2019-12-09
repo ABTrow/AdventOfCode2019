@@ -36,7 +36,7 @@ class IntcodeProcessor {
     while (i < code.length && this.isRunning) {
       let [instruction, parameterModes] = this.parseInstruction(code[i]);
 
-      let params = [code[code[i + 1]], code[code[i + 2]]];
+      let params = [code[code[i + 1]], code[(code[i + 2], i + 3)]];
 
       parameterModes.forEach((parameterMode, idx) => {
         if (parameterMode === 1) {
@@ -46,12 +46,17 @@ class IntcodeProcessor {
         }
       });
 
+      console.log(`line ${i}`);
+
       switch (instruction) {
         case 99:
           console.log('program complete');
           return;
         case 1: {
-          let target = code[i + 3];
+          let target =
+            parameterModes[2] === 2
+              ? this.relativeBase + code[i + 3]
+              : code[i + 3];
           console.log(
             `adding ${params[0]}, ${params[1]} and placing it at ${target}`
           );
@@ -60,7 +65,10 @@ class IntcodeProcessor {
           break;
         }
         case 2: {
-          let target = code[i + 3];
+          let target =
+            parameterModes[2] === 2
+              ? this.relativeBase + code[i + 3]
+              : code[i + 3];
           console.log(
             `multiplying ${params[0]}, ${params[1]} and placing it at ${target}`
           );
@@ -70,9 +78,11 @@ class IntcodeProcessor {
         }
         case 3: {
           if (this.inputs.length) {
-            let target = parameterModes[0] === 2 ? params[0] : code[i + 1];
+            let target =
+              parameterModes[2] === 2
+                ? this.relativeBase + code[i + 3]
+                : code[i + 3];
             console.log(`${i}: placing ${this.inputs[0]} at ${target}`);
-            console.log(`relative base: ${this.relativeBase}`);
             code[target] = this.inputs.shift();
             i += 2;
           } else {
@@ -83,7 +93,7 @@ class IntcodeProcessor {
         }
         case 4: {
           this.output = params[0];
-          // console.log(`Line ${i}: ${this.output}`);
+          console.log(`Line ${i}: ${this.output}`);
           this.sendOutput();
           i += 2;
           break;
@@ -97,11 +107,14 @@ class IntcodeProcessor {
         case 6: {
           if (!params[0]) i = params[1];
           else i += 3;
-          // console.log(`instruction 6 jumping to ${i}`);
+          console.log(`instruction 6 jumping to ${i}`);
           break;
         }
         case 7: {
-          let target = code[i + 3];
+          let target =
+            parameterModes[2] === 2
+              ? this.relativeBase + code[i + 3]
+              : code[i + 3];
           console.log(`checking if ${params[0]} is less than ${params[1]}`);
           code[target] = params[0] < params[1] ? 1 : 0;
           console.log(`placing ${code[target]} at ${target}`);
@@ -109,9 +122,13 @@ class IntcodeProcessor {
           break;
         }
         case 8: {
-          let target = code[i + 3];
+          let target =
+            parameterModes[2] === 2
+              ? this.relativeBase + code[i + 3]
+              : code[i + 3];
+          console.log(`checking if ${params[0]} is equal to ${params[1]}`);
           code[target] = params[0] === params[1] ? 1 : 0;
-          // console.log(`placing ${code[target]} at ${target}`);
+          console.log(`placing ${code[target]} at ${target}`);
           i += 4;
           break;
         }
