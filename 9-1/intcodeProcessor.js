@@ -20,6 +20,17 @@ class IntcodeProcessor {
     }
   }
 
+  findWriteTarget(mode, parameter) {
+    if (mode === 2) return this.relativeBase + parameter;
+    return parameter;
+  }
+
+  findReadArgument(mode, parameter) {
+    if (mode === 2) return code[this.relativeBase + parameter];
+    if (mode === 1) return parameter;
+    return code[parameter];
+  }
+
   sendOutput() {
     if (this.outputDestination) {
       this.outputDestination.receiveInput(this.output);
@@ -36,53 +47,38 @@ class IntcodeProcessor {
     while (i < code.length && this.isRunning) {
       let [instruction, parameterModes] = this.parseInstruction(code[i]);
 
-      let params = [code[code[i + 1]], code[(code[i + 2], i + 3)]];
-
-      parameterModes.forEach((parameterMode, idx) => {
-        if (parameterMode === 1) {
-          params[idx] = code[i + idx + 1];
-        } else if (parameterMode === 2) {
-          params[idx] = code[this.relativeBase + code[i + idx + 1]];
-        }
-      });
-
-      console.log(`line ${i}`);
+      // console.log(`line ${i}:`);
 
       switch (instruction) {
         case 99:
           console.log('program complete');
           return;
         case 1: {
-          let target =
-            parameterModes[2] === 2
-              ? this.relativeBase + code[i + 3]
-              : code[i + 3];
-          console.log(
-            `adding ${params[0]}, ${params[1]} and placing it at ${target}`
-          );
-          code[target] = params[0] + params[1];
+          let noun = this.findReadArgument(parameterModes[0], code[i + 1]);
+          let verb = this.findReadArgument(parameterModes[1], code[i + 2]);
+          let target = this.findWriteTarget(parameterModes[2], code[i + 3]);
+          // console.log(
+          //   `adding ${noun}, ${verb} and placing it at ${target}`
+          // );
+          code[target] = noun + verb;
           i += 4;
           break;
         }
         case 2: {
-          let target =
-            parameterModes[2] === 2
-              ? this.relativeBase + code[i + 3]
-              : code[i + 3];
-          console.log(
-            `multiplying ${params[0]}, ${params[1]} and placing it at ${target}`
-          );
-          code[target] = params[0] * params[1];
+          let noun = this.findReadArgument(parameterModes[0], code[i + 1]);
+          let verb = this.findReadArgument(parameterModes[1], code[i + 2]);
+          let target = this.findWriteTarget(parameterModes[2], code[i + 3]);
+          // console.log(
+          //   `multiplying ${noun}, ${verb} and placing it at ${target}`
+          // );
+          code[target] = noun * verb;
           i += 4;
           break;
         }
         case 3: {
           if (this.inputs.length) {
-            let target =
-              parameterModes[2] === 2
-                ? this.relativeBase + code[i + 3]
-                : code[i + 3];
-            console.log(`${i}: placing ${this.inputs[0]} at ${target}`);
+            let target = this.findWriteTarget(parameterModes[0], code[i + 1]);
+            // console.log(`${i}: placing ${this.inputs[0]} at ${target}`);
             code[target] = this.inputs.shift();
             i += 2;
           } else {
@@ -92,49 +88,52 @@ class IntcodeProcessor {
           break;
         }
         case 4: {
-          this.output = params[0];
-          console.log(`Line ${i}: ${this.output}`);
+          this.output = this.findReadArgument(parameterModes[0], code[i + 1]);
+          // console.log(`Line ${i}: ${this.output}`);
           this.sendOutput();
           i += 2;
           break;
         }
         case 5: {
-          if (params[0]) i = params[1];
+          let noun = this.findReadArgument(parameterModes[0], code[i + 1]);
+          let verb = this.findReadArgument(parameterModes[1], code[i + 2]);
+          if (noun) i = verb;
           else i += 3;
-          console.log(`instruction 5 jumping to ${i}`);
+          // console.log(`instruction 5 jumping to ${i}`);
           break;
         }
         case 6: {
-          if (!params[0]) i = params[1];
+          let noun = this.findReadArgument(parameterModes[0], code[i + 1]);
+          let verb = this.findReadArgument(parameterModes[1], code[i + 2]);
+          if (!noun) i = verb;
           else i += 3;
-          console.log(`instruction 6 jumping to ${i}`);
+          // console.log(`instruction 6 jumping to ${i}`);
           break;
         }
         case 7: {
-          let target =
-            parameterModes[2] === 2
-              ? this.relativeBase + code[i + 3]
-              : code[i + 3];
-          console.log(`checking if ${params[0]} is less than ${params[1]}`);
-          code[target] = params[0] < params[1] ? 1 : 0;
-          console.log(`placing ${code[target]} at ${target}`);
+          let noun = this.findReadArgument(parameterModes[0], code[i + 1]);
+          let verb = this.findReadArgument(parameterModes[1], code[i + 2]);
+          let target = this.findWriteTarget(parameterModes[2], code[i + 3]);
+          // console.log(`checking if ${noun} is less than ${verb}`);
+          code[target] = noun < verb ? 1 : 0;
+          // console.log(`placing ${code[target]} at ${target}`);
           i += 4;
           break;
         }
         case 8: {
-          let target =
-            parameterModes[2] === 2
-              ? this.relativeBase + code[i + 3]
-              : code[i + 3];
-          console.log(`checking if ${params[0]} is equal to ${params[1]}`);
-          code[target] = params[0] === params[1] ? 1 : 0;
-          console.log(`placing ${code[target]} at ${target}`);
+          let noun = this.findReadArgument(parameterModes[0], code[i + 1]);
+          let verb = this.findReadArgument(parameterModes[1], code[i + 2]);
+          let target = this.findWriteTarget(parameterModes[2], code[i + 3]);
+          // console.log(`checking if ${noun} is equal to ${verb}`);
+          code[target] = noun === verb ? 1 : 0;
+          // console.log(`placing ${code[target]} at ${target}`);
           i += 4;
           break;
         }
         case 9: {
-          this.relativeBase += params[0];
-          console.log(`new relative base: ${this.relativeBase}`);
+          let noun = this.findReadArgument(parameterModes[0], code[i + 1]);
+          this.relativeBase += noun;
+          // console.log(`new relative base: ${this.relativeBase}`);
           i += 2;
           break;
         }
