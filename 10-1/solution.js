@@ -21,16 +21,22 @@ function visibilityFinder(asteroidMap) {
     asteroidArray.forEach(otherAsteroid => {
       let xDifference = homeAsteroid.x - otherAsteroid.x;
       let yDifference = homeAsteroid.y - otherAsteroid.y;
-      visibileAsteroids.add(Math.atan2(xDifference, yDifference));
+      if (xDifference || yDifference) {
+        visibileAsteroids.add(Math.atan2(yDifference, xDifference));
+      }
     });
     if (visibileAsteroids.size > mostVisbile) {
       bestAsteroid = homeAsteroid;
       mostVisbile = visibileAsteroids.size;
     }
-    console.log(visibileAsteroids);
   });
-  // console.log(mostVisbile);
-  // return bestAsteroid;
+  console.log(bestAsteroid, mostVisbile);
+  return [bestAsteroid, mostVisbile];
 }
 
-console.log(visibilityFinder(INPUT));
+// visibilityFinder(INPUT);
+
+module.exports = {
+  asteroidPlotter,
+  visibilityFinder,
+};
