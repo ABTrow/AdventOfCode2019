@@ -12,7 +12,7 @@ robot.paintCode();
 let formattedCanvas = robot.canvas.map(line =>
   line
     .map(square => {
-      return square ? square : ' ';
+      return square ? '@' : ' ';
     })
     .join('')
 );
