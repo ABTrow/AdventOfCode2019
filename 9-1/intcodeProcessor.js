@@ -26,7 +26,7 @@ class IntcodeProcessor {
   }
 
   findReadArgument(mode, parameter) {
-    if (mode === 2) return code[this.relativeBase + parameter];
+    if (mode === 2) return this.program[this.relativeBase + parameter];
     if (mode === 1) return parameter;
     return this.program[parameter];
   }

@@ -1,15 +1,13 @@
 const IntcodeProcessor = require('../9-1/intcodeProcessor');
 
 class PainterRobot {
-  constructor(program) {
+  constructor(program, canvas, x, y) {
     this.processor = new IntcodeProcessor(program);
     this.instructionQueue = [];
-    this.location = { x: 100, y: 100 };
+    this.location = { x, y };
     this.direction = 90;
     this.history = new Set();
-    this.canvas = Array(200)
-      .fill([])
-      .map(e => Array(200).fill(0));
+    this.canvas = canvas;
 
     this.processor.setOutputDestination(this);
   }
@@ -30,6 +28,11 @@ class PainterRobot {
     if (turn === 0) this.direction += 90;
     else this.direction -= 90;
     this.direction = (360 + this.direction) % 360;
+
+    console.log(
+      this.location,
+      `${this.canvas[this.location.y][this.location.x] ? 'white' : 'black'}`
+    );
 
     switch (this.direction) {
       case 0:
