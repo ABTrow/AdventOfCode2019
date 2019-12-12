@@ -6,6 +6,9 @@ class Jupiter {
         velocity: { x: 0, y: 0, z: 0 },
       };
     });
+    this.initialState = this.moons.map(moon => {
+      return { position: { ...moon.position }, velocity: { ...moon.velocity } };
+    });
   }
 
   simulateSteps(steps) {
@@ -84,6 +87,78 @@ class Jupiter {
 
     console.log(totalEnergy);
   }
+
+  moonsAreEqual(moon1, moon2) {
+    return (
+      moon1.position.x === moon2.position.x &&
+      moon1.position.y === moon2.position.y &&
+      moon1.position.z === moon2.position.z &&
+      moon1.velocity.x === moon2.velocity.x &&
+      moon1.velocity.y === moon2.velocity.y &&
+      moon1.velocity.z === moon2.velocity.z
+    );
+  }
+
+  runUntilRepeat() {
+    let currentStepCount = 0;
+    let xIsRepeat = false;
+    let yIsRepeat = false;
+    let zIsRepeat = false;
+    do {
+      this.applyGravity();
+      this.movePlanets();
+      currentStepCount++;
+      if (!xIsRepeat) {
+        if (
+          (xIsRepeat = this.moons.every((moon, idx) => {
+            return (
+              moon.position.x === this.initialState[idx].position.x &&
+              moon.velocity.x === this.initialState[idx].velocity.x
+            );
+          }))
+        )
+          xIsRepeat = currentStepCount;
+      }
+      if (!yIsRepeat) {
+        if (
+          this.moons.every((moon, idx) => {
+            return (
+              moon.position.y === this.initialState[idx].position.y &&
+              moon.velocity.y === this.initialState[idx].velocity.y
+            );
+          })
+        )
+          yIsRepeat = currentStepCount;
+      }
+      if (!zIsRepeat) {
+        if (
+          (zIsRepeat = this.moons.every((moon, idx) => {
+            return (
+              moon.position.z === this.initialState[idx].position.z &&
+              moon.velocity.z === this.initialState[idx].velocity.z
+            );
+          }))
+        )
+          zIsRepeat = currentStepCount;
+      }
+      if (currentStepCount % 1000000 === 0) console.log(currentStepCount);
+    } while (!xIsRepeat || !yIsRepeat || !zIsRepeat);
+    console.log(xIsRepeat, yIsRepeat, zIsRepeat);
+    console.log(this.findLCM(xIsRepeat, yIsRepeat, zIsRepeat));
+  }
+
+  findLCM(...numbers) {
+    let gcf = null;
+    for (let i = Math.min(...numbers); i >= 1; i--) {
+      if (numbers.every(number => number % i === 0)) {
+        gcf = i;
+        break;
+      }
+    }
+    console.log(numbers.reduce((total, number) => total * number, 1));
+    console.log(gcf);
+    return numbers.reduce((total, number) => total * number, 1) / gcf;
+  }
 }
 
 let jupiter = new Jupiter(
@@ -93,6 +168,11 @@ let jupiter = new Jupiter(
   { x: 12, y: -14, z: 18 }
 );
 
-jupiter.simulateSteps(1000);
-jupiter.logPlanetPositions();
-jupiter.logTotalSystemEnergy();
+// let jupiter = new Jupiter(
+//   { x: -1, y: 0, z: 2 },
+//   { x: 2, y: -10, z: -7 },
+//   { x: 4, y: -8, z: 8 },
+//   { x: 3, y: 5, z: -1 }
+// );
+
+jupiter.runUntilRepeat();
