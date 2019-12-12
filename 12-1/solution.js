@@ -148,16 +148,18 @@ class Jupiter {
   }
 
   findLCM(...numbers) {
-    let gcf = null;
-    for (let i = Math.min(...numbers); i >= 1; i--) {
-      if (numbers.every(number => number % i === 0)) {
-        gcf = i;
-        break;
-      }
+    function gcd(a, b) {
+      return !b ? a : gcd(b, a % b);
     }
-    console.log(numbers.reduce((total, number) => total * number, 1));
-    console.log(gcf);
-    return numbers.reduce((total, number) => total * number, 1) / gcf;
+
+    let multiple = Math.min(...numbers);
+
+    numbers.forEach(num => {
+      let gcf = gcd(multiple, num);
+      multiple = (num * multiple) / gcf;
+    });
+
+    return multiple;
   }
 }
 
