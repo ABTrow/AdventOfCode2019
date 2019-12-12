@@ -1,6 +1,6 @@
 class IntcodeProcessor {
   constructor(program, ...inputs) {
-    this.program = program;
+    this.program = program.concat(Array(5000).fill(0));
     this.inputs = [...inputs];
     this.output = null;
     this.instructionPointer = 0;
@@ -28,7 +28,7 @@ class IntcodeProcessor {
   findReadArgument(mode, parameter) {
     if (mode === 2) return code[this.relativeBase + parameter];
     if (mode === 1) return parameter;
-    return code[parameter];
+    return this.program[parameter];
   }
 
   sendOutput() {
@@ -42,7 +42,7 @@ class IntcodeProcessor {
   executeCode() {
     this.isRunning = true;
     let i = this.instructionPointer;
-    let code = this.program.concat(Array(5000).fill(0));
+    let code = this.program;
 
     while (i < code.length && this.isRunning) {
       let [instruction, parameterModes] = this.parseInstruction(code[i]);

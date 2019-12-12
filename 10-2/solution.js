@@ -27,7 +27,7 @@ function destroyAsteroids(asteroidMap, homeAsteroid) {
     angle => angle <= Math.PI / 2
   );
 
-  while (destroyedCount < 202) {
+  while (destroyedCount < 200) {
     let currentAngle = asteroidAngles[asteroidAngleIdx];
     let justDestroyed = null;
     if (asteroidObject[currentAngle].length) {
@@ -38,16 +38,5 @@ function destroyAsteroids(asteroidMap, homeAsteroid) {
     asteroidAngleIdx = (asteroidAngleIdx + 1) % asteroidAngles.length;
   }
 }
-
-// console.log(
-//   destroyAsteroids(
-//     `.#....#####...#..
-// ##...##.#####..##
-// ##...#...#.#####.
-// ..#.....X...###..
-// ..#.#.....#....##`,
-//     { x: 8, y: 3 }
-//   )
-// );
 
 console.log(destroyAsteroids(INPUT, { x: 11, y: 13 }));
