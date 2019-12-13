@@ -7,6 +7,8 @@ class GameStation {
     this.screenWidth = canvas[0].length;
     this.joystickDirection = 0;
     this.score = 0;
+    this.paddlePos = 22;
+    this.ballPos = 20;
     this.processor.setOutputDestination(this);
   }
 
@@ -19,6 +21,7 @@ class GameStation {
 
   start() {
     this.processor.executeCode();
+    console.log(this.score);
   }
 
   joystickInput(input = 0) {

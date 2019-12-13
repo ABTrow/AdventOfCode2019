@@ -6,17 +6,19 @@ canvas[0][0] = 1;
 let gameStation = new GameStation(INPUT, canvas, 2);
 // most recent joystick input
 
-document.addEventListener('keydown', event => {
-  if (event.key === 'ArrowRight') {
-    gameStation.joystickInput(1);
-  } else if (event.key === 'ArrowLeft') {
-    gameStation.joystickInput(-1);
-  }
-  paint();
-});
+// document.addEventListener('keydown', event => {
+//   if (event.key === 'ArrowRight') {
+//     gameStation.joystickInput(1);
+//   } else if (event.key === 'ArrowLeft') {
+//     gameStation.joystickInput(-1);
+//   }
+//   paint();
+// });
 
 // Actual table cells
 const tds = [];
+
+const scoreboard = document.getElementById('scoreboard');
 
 // <table> element
 const table = document.createElement('tbody');
@@ -39,7 +41,8 @@ for (let h = 0; h < gameStation.screenHeight; h++) {
 document.getElementById('canvas').append(table);
 
 const paint = () => {
-  let tds = document.querySelectorAll('td');
+  scoreboard.innerHTML = `SCORE: ${gameStation.score}`;
+  // let tds = document.querySelectorAll('td');
   tds.forEach(cell => {
     switch (
       gameStation.canvas[Number(cell.dataset.y)][Number(cell.dataset.x)]
@@ -61,12 +64,25 @@ const paint = () => {
         break;
     }
   });
+  gameStation.paddlePos =
+    tds.findIndex(td => td.className === 'paddle') % gameStation.screenWidth;
+
+  gameStation.ballPos =
+    tds.findIndex(td => td.className === 'ball') % gameStation.screenWidth;
 };
 
 const tick = () => {
-  gameStation.joystickInput(0);
+  console.log(gameStation.paddlePos, gameStation.ballPos);
+
+  if (gameStation.paddlePos < gameStation.ballPos) {
+    gameStation.joystickInput(1);
+  } else if (gameStation.paddlePos > gameStation.ballPos) {
+    gameStation.joystickInput(-1);
+  } else {
+    gameStation.joystickInput(0);
+  }
   paint();
 };
 
 gameStation.start();
-setInterval(() => tick(), 1000);
+setInterval(() => tick(), 50);
