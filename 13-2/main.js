@@ -4,6 +4,16 @@ let canvas = Array(24)
 canvas[0][0] = 1;
 
 let gameStation = new GameStation(INPUT, canvas, 2);
+// most recent joystick input
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'ArrowRight') {
+    gameStation.joystickInput(1);
+  } else if (event.key === 'ArrowLeft') {
+    gameStation.joystickInput(-1);
+  }
+  paint();
+});
 
 // Actual table cells
 const tds = [];
@@ -31,15 +41,32 @@ document.getElementById('canvas').append(table);
 const paint = () => {
   let tds = document.querySelectorAll('td');
   tds.forEach(cell => {
-    if (
-      gameStation.canvas[Number(cell.dataset.y)][Number(cell.dataset.x)] === 1
+    switch (
+      gameStation.canvas[Number(cell.dataset.y)][Number(cell.dataset.x)]
     ) {
-      cell.classList.add('alive');
-    } else {
-      cell.classList.remove('alive');
+      case 1:
+        cell.className = 'wall';
+        break;
+      case 2:
+        cell.className = 'block';
+        break;
+      case 3:
+        cell.className = 'paddle';
+        break;
+      case 4:
+        cell.className = 'ball';
+        break;
+      default:
+        cell.className = '';
+        break;
     }
   });
 };
 
+const tick = () => {
+  gameStation.joystickInput(0);
+  paint();
+};
+
 gameStation.start();
-console.log(gameStation.score);
+setInterval(() => tick(), 1000);

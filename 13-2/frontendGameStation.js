@@ -11,7 +11,6 @@ class GameStation {
   }
 
   receiveInput(input) {
-    console.log('got input from processor');
     this.instructionQueue.push(input);
     if (this.instructionQueue.length === 3) {
       this.handleInstruction();
@@ -20,6 +19,10 @@ class GameStation {
 
   start() {
     this.processor.executeCode();
+  }
+
+  joystickInput(input = 0) {
+    this.processor.receiveInput(input);
   }
 
   handleInstruction() {
@@ -31,12 +34,6 @@ class GameStation {
       let blockType = this.instructionQueue[2];
 
       this.setPixel({ x, y, blockType });
-      console.log(
-        this.canvas.map(line => {
-          return line.join('');
-        })
-      );
-      this.processor.receiveInput(this.joystickDirection);
     }
 
     this.instructionQueue = [];
@@ -44,6 +41,6 @@ class GameStation {
 
   setPixel(instruction) {
     let { x, y, blockType } = instruction;
-    this.canvas[y][x] = drawDictionary[blockType];
+    this.canvas[y][x] = blockType;
   }
 }

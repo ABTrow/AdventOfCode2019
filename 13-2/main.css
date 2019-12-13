@@ -17,14 +17,27 @@ h1 {
   border-collapse: collapse;
 }
 
-#canvas td {
-  width: 25px;
-  height: 25px;
+td {
+  width: 30px;
+  height: 20px;
   background: #444;
+  border: 1px solid #444;
 }
 
-td.alive {
+td.wall {
   background-color: #8cc8dd;
+}
+
+td.block {
+  background-color: crimson;
+}
+
+td.paddle {
+  background-color: white;
+}
+
+td.ball {
+  background-color: olivedrab;
 }
 
 .button {
