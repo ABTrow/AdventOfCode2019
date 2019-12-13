@@ -1,4 +1,4 @@
-module.exports = [
+INPUT = [
   2,
   380,
   379,

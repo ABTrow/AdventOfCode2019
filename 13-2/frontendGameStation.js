@@ -1,5 +1,3 @@
-const IntcodeProcessor = require('../9-1/intcodeProcessor');
-
 class GameStation {
   constructor(program, canvas) {
     this.processor = new IntcodeProcessor(program);
@@ -32,7 +30,7 @@ class GameStation {
       let y = this.instructionQueue[1];
       let blockType = this.instructionQueue[2];
 
-      this.drawPixel({ x, y, blockType });
+      this.setPixel({ x, y, blockType });
       console.log(
         this.canvas.map(line => {
           return line.join('');
@@ -44,11 +42,8 @@ class GameStation {
     this.instructionQueue = [];
   }
 
-  drawPixel(instruction) {
+  setPixel(instruction) {
     let { x, y, blockType } = instruction;
-    const drawDictionary = [' ', '◊', '#', '–', '•'];
     this.canvas[y][x] = drawDictionary[blockType];
   }
 }
-
-module.exports = GameStation;

@@ -1,0 +1,38 @@
+body {
+  font-family: Futura, Helvetica, Arial, sans-serif;
+  color: #444;
+}
+
+h1 {
+  font-weight: normal;
+}
+
+#container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+#canvas {
+  border-collapse: collapse;
+}
+
+#canvas td {
+  width: 25px;
+  height: 25px;
+  background: #444;
+}
+
+td.alive {
+  background-color: #8cc8dd;
+}
+
+.button {
+  padding: 0.85em 1em;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  font-size: 0.9em;
+  text-align: center;
+  background-color: #2ba6cb;
+  color: #fefefe;
+}
