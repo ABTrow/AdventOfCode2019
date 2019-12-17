@@ -67,7 +67,8 @@ function minimumOre(conversionTable) {
     console.log(`put ${batches * formula.makes - need} back into storage`);
   }
 
-  calculateIngredients('FUEL', 1);
+  calculateIngredients('FUEL', 4906797);
+  console.log(extraStore);
   return totalOre;
 }
 
