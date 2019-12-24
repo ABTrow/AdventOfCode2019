@@ -51,7 +51,7 @@ class IntcodeProcessor {
 
       switch (instruction) {
         case 99:
-          console.log('program complete');
+          // console.log('program complete');
           return;
         case 1: {
           let noun = this.findReadArgument(parameterModes[0], code[i + 1]);
